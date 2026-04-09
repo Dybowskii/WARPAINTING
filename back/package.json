@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "humps": "^2.0.1"
+  },
+  "devDependencies": {
+    "@types/humps": "^2.0.6"
+  }
+}
