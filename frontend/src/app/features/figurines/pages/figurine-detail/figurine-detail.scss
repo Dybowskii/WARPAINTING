@@ -1,0 +1,44 @@
+:host {
+  display: block;
+  padding: 2rem;
+}
+
+.state-info {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.state-error {
+  padding: 1rem;
+  color: #c0392b;
+  background: #fdecea;
+  border-radius: 8px;
+}
+
+.detail {
+  max-width: 800px;
+
+  &__header {
+    display: flex;
+    align-items: baseline;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  &__name {
+    font-size: 2rem;
+    font-weight: 700;
+    margin: 0;
+  }
+
+  &__manufacturer {
+    color: #888;
+    font-size: 1rem;
+  }
+
+  &__description {
+    color: #444;
+    line-height: 1.7;
+  }
+}

@@ -1,0 +1,46 @@
+:host {
+  display: block;
+  padding: 2rem;
+}
+
+.list-header {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 2rem;
+
+  h1 {
+    font-size: 1.75rem;
+    font-weight: 600;
+    margin: 0;
+  }
+}
+
+.count {
+  background: #f0f0f0;
+  padding: 0.25rem 0.75rem;
+  border-radius: 999px;
+  font-size: 0.875rem;
+  color: #666;
+}
+
+.state-info {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.state-error {
+  text-align: center;
+  padding: 1rem;
+  color: #c0392b;
+  background: #fdecea;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 1.5rem;
+}

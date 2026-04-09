@@ -5,10 +5,10 @@ from .mixins import ImageSaveMinix
 import uuid
 
 def project_image_path(instance, filename):
-    return f'projects/{instance.project.id}/{filename}'
+    return f'projects/{instance.project.pk}/{filename}'
 
 def step_image_path(instance, filename):
-    return f'projects/{instance.project_step.project.id}/steps/{instance.project_step.id}/{filename}'
+    return f'projects/{instance.project_step.project.pk}/steps/{instance.project_step.pk}/{filename}'
 
 class Project(models.Model):
 
@@ -123,7 +123,7 @@ class ProjectStep(models.Model):
         return self.name
 
 
-class ProjectImage(models.Model):
+class ProjectImage(ImageSaveMinix, models.Model):
 
     uuid = models.UUIDField(
         primary_key=True,
@@ -133,11 +133,16 @@ class ProjectImage(models.Model):
 
     name = models.CharField(
         max_length=255,
+        null=True,
+        blank=True,
     )
 
-    # image = models.ImageField(
-    #     upload_to=project_image_path,
-    # )
+    image = models.ImageField(
+        upload_to=project_image_path,
+        null=True,
+        blank=True,
+        max_length=255,
+    )
 
     project = models.ForeignKey(
         Project,
@@ -158,10 +163,13 @@ class StepImage(ImageSaveMinix, models.Model):
     
     name = models.CharField(
         max_length=255,
+        null=True,
+        blank=True,
     )
 
     image = models.ImageField(
         upload_to=step_image_path,
+        max_length=255,
     )
 
     project_step = models.ForeignKey(

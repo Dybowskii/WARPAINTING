@@ -1,0 +1,56 @@
+<div class="card">
+  <form (ngSubmit)="submit()">
+    <div class="row">
+      <label class="lbl">Account type</label>
+      <div class="pills" role="radiogroup">
+        <label class="pill">
+          <input type="radio" value="personal" [formField]="form.accountType" />
+          Personal
+        </label>
+        <label class="pill">
+          <input type="radio" value="business" [formField]="form.accountType" />
+          Business
+        </label>
+      </div>
+    </div>
+
+    @if (isBusiness()) {
+      <div class="row">
+        <label class="lbl" for="company">Company</label>
+        <input
+          id="company"
+          type="text"
+          [formField]="form.companyName"
+          autocomplete="none"
+          autofill="none"
+        />
+      </div>
+    }
+
+    <div class="row">
+      <label class="lbl" for="email">Email</label>
+      <input
+        id="email"
+        type="text"
+        placeholder="you@domain.com"
+        [formField]="form.email"
+        autocomplete="none"
+        autofill="none"
+      />
+      @let email = form.email();
+      @if (email && email.touched() && email.invalid()) {
+        <div class="help">Enter a valid email.</div>
+      }
+    </div>
+
+    <div class="row">
+      <label class="lbl" for="pw">Password</label>
+      <input id="pw" type="password" [formField]="form.password" />
+      <div class="meter" [style.--score]="passwordStrength()"></div>
+    </div>
+
+    <div class="actions">
+      <button type="submit" [disabled]="!canSubmit()">Create account</button>
+    </div>
+  </form>
+</div>

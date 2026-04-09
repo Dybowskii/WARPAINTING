@@ -1,0 +1,22 @@
+<div class="list-header">
+  <h1>Projekty</h1>
+  <span class="count">{{ store.total() }} projektów</span>
+</div>
+
+@if (store.loading()) {
+  <div class="state-info">Ładowanie...</div>
+}
+
+@if (store.error()) {
+  <div class="state-error">{{ store.error() }}</div>
+}
+
+@if (!store.loading() && store.projects().length === 0) {
+  <div class="state-info">Brak projektów</div>
+}
+
+<div class="grid">
+  @for (project of store.projects(); track project.pk) {
+    <app-project-card [project]="project" />
+  }
+</div>

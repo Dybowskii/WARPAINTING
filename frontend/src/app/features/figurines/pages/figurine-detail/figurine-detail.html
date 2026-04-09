@@ -1,0 +1,17 @@
+@if (store.loading()) {
+  <div class="state-info">Ładowanie...</div>
+}
+
+@if (store.error()) {
+  <div class="state-error">{{ store.error() }}</div>
+}
+
+@if (store.selected(); as f) {
+  <div class="detail">
+    <div class="detail__header">
+      <h1 class="detail__name">{{ f.name }}</h1>
+      <span class="detail__manufacturer">{{ f.manufacturerData.name }}</span>
+    </div>
+    <p class="detail__description">{{ f.description }}</p>
+  </div>
+}

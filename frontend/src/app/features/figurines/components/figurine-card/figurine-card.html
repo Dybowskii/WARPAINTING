@@ -1,0 +1,7 @@
+<div class="card" [routerLink]="['/figurines', figurine().pk]">
+  <div class="card-body">
+    <h3 class="name">{{ figurine().name }}</h3>
+    <p class="manufacturer">{{ figurine().manufacturerData.name }}</p>
+    <p class="description">{{ figurine().description }}</p>
+  </div>
+</div>

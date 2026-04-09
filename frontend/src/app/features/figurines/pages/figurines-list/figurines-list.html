@@ -1,0 +1,22 @@
+<div class="list-header">
+  <h1>Figurki</h1>
+  <span class="count">{{ store.total() }} figurek</span>
+</div>
+
+@if (store.loading()) {
+  <div class="state-info">Ładowanie...</div>
+}
+
+@if (store.error()) {
+  <div class="state-error">{{ store.error() }}</div>
+}
+
+@if (!store.loading() && store.figurines().length === 0) {
+  <div class="state-info">Brak figurek</div>
+}
+
+<div class="grid">
+  @for (figurine of store.figurines(); track figurine.pk) {
+    <app-figurine-card [figurine]="figurine" />
+  }
+</div>

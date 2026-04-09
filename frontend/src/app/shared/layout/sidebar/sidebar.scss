@@ -1,0 +1,33 @@
+.sidebar {
+  width: 220px;
+  background: #fff;
+  border-right: 1px solid #e0e0e0;
+  padding: 1.5rem 1rem;
+  overflow-y: auto;
+
+  &__nav {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  &__link {
+    display: block;
+    padding: 0.6rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #444;
+    font-size: 0.9rem;
+    transition: background 0.15s;
+
+    &:hover {
+      background: #f0f0f0;
+    }
+
+    &--active {
+      background: #ece9ff;
+      color: #5b4fcf;
+      font-weight: 600;
+    }
+  }
+}

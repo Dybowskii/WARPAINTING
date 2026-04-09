@@ -23,6 +23,7 @@ class ElementSerializer(serializers.ModelSerializer):
 
 class MiniatureSerializer(serializers.ModelSerializer):
     elements = ElementSerializer(many=True, read_only=True)
+    manufacturer_data = ManufacturerSerializer(source='manufacturer', read_only=True)
 
     class Meta:
         model = Miniature
@@ -32,4 +33,5 @@ class MiniatureSerializer(serializers.ModelSerializer):
             'description',
             'manufacturer',
             'elements',
+            'manufacturer_data'
         ]
