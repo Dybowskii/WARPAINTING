@@ -23,4 +23,3 @@ class ProjectViewSet(viewsets.ModelViewSet):
 class PaintingTechniqueViewSet(viewsets.ModelViewSet):
     queryset = PaintingTechnique.objects.all()
     serializer_class = PaintingTechniqueSerializer
-    

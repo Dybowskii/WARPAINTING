@@ -1,3 +1,11 @@
 <nav class="navbar">
-  <span class="navbar__logo">{{ title() }}</span>
+  <span class="navbar__logo">Warpainting</span>
+  <div class="pages">
+    <a class="pages__link" routerLink="/figurines" routerLinkActive="pages__link--active">
+      {{ 'Navigation.Figurines' | translate }}
+    </a>
+    <a class="pages__link" routerLink="/projects" routerLinkActive="pages__link--active">
+      {{ 'Navigation.Projects' | translate }}
+    </a>
+  </div>
 </nav>

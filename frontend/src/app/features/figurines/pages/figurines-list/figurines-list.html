@@ -1,6 +1,9 @@
 <div class="list-header">
   <h1>Figurki</h1>
   <span class="count">{{ store.total() }} figurek</span>
+  <div class="actions">
+    <a class="btn btn--primary" routerLink="/figurines/new"> Dodaj </a>
+  </div>
 </div>
 
 @if (store.loading()) {

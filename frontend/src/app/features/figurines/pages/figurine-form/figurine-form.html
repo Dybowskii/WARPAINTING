@@ -1,54 +1,95 @@
+<div class="form-header">
+  <h1>Dodaj figurkę</h1>
+</div>
 <div class="card">
-  <form (ngSubmit)="submit()">
+  <form [formRoot]="form">
     <div class="row">
-      <label class="lbl">Account type</label>
-      <div class="pills" role="radiogroup">
-        <label class="pill">
-          <input type="radio" value="personal" [formField]="form.accountType" />
-          Personal
-        </label>
-        <label class="pill">
-          <input type="radio" value="business" [formField]="form.accountType" />
-          Business
-        </label>
+      <div class="field">
+        <label class="lbl"> Image </label>
+        <input
+          #photosInput
+          class="file-input"
+          id="photos"
+          type="file"
+          accept=".png,.jpg,.jpeg,.webp,.heic,.heif,image/*"
+          multiple
+          (change)="onPhotosSelected($event)"
+        />
+        <div
+          class="photos-strip"
+          [class.is-dragover]="isDragOver()"
+          (dragover)="onDragOverPhotos($event)"
+          (dragleave)="onDragLeavePhotos($event)"
+          (drop)="onDropPhotos($event)"
+          cdkDropList
+          [cdkDropListData]="photos()"
+          cdkDropListOrientation="horizontal"
+          (cdkDropListDropped)="dropSort($event)"
+        >
+          @for (p of photos(); track p.id; let i = $index) {
+            <div class="tile" cdkDrag [class.border]="i === 0">
+              <img class="img" [src]="p.previewUrl" alt="" />
+
+              <button type="button" class="remove" (click)="removePhoto(p.id)">x</button>
+            </div>
+          }
+
+          @if (photos().length < MAX_PHOTOS) {
+            <button type="button" class="tile add" (click)="photosInput.click()">
+              <div class="plus">+</div>
+              <div class="add-text">Dodaj zdjęcia</div>
+              <div class="add-sub">({{ photos().length }}/{{ MAX_PHOTOS }})</div>
+            </button>
+          }
+        </div>
+
+        @if (imageError()) {
+          <div class="help">{{ imageError() }}</div>
+        }
       </div>
     </div>
-
-    @if (isBusiness()) {
-      <div class="row">
-        <label class="lbl" for="company">Company</label>
+    <div class="row two-columns">
+      <div class="field">
+        <label class="lbl" for="figurineName">Figurine Name</label>
         <input
-          id="company"
+          id="figurineName"
           type="text"
-          [formField]="form.companyName"
+          placeholder="Enter figurine name"
+          [formField]="form.figurineName"
           autocomplete="none"
           autofill="none"
         />
+        @let figurineName = form.figurineName();
+        @if (figurineName && figurineName.touched() && figurineName.invalid()) {
+          <div class="help">Enter a valid figurine name.</div>
+        }
       </div>
-    }
+
+      <div class="field">
+        <label class="lbl" for="manufacturer">Manufacturer</label>
+        <select id="manufacturer" [formField]="form.manufacturer">
+          <option value="" disabled selected>Select a manufacturer</option>
+          @for (m of manufacturers(); track m.pk) {
+            <option [value]="m.pk">{{ m.name }}</option>
+          }
+        </select>
+      </div>
+    </div>
 
     <div class="row">
-      <label class="lbl" for="email">Email</label>
-      <input
-        id="email"
-        type="text"
-        placeholder="you@domain.com"
-        [formField]="form.email"
+      <label class="lbl" for="description">Description</label>
+      <textarea
+        id="description"
+        placeholder="Enter description"
+        [formField]="form.description"
         autocomplete="none"
         autofill="none"
-      />
-      @let email = form.email();
-      @if (email && email.touched() && email.invalid()) {
-        <div class="help">Enter a valid email.</div>
+      ></textarea>
+      @let description = form.description();
+      @if (description && description.touched() && description.invalid()) {
+        <div class="help">Enter a valid description.</div>
       }
     </div>
-
-    <div class="row">
-      <label class="lbl" for="pw">Password</label>
-      <input id="pw" type="password" [formField]="form.password" />
-      <div class="meter" [style.--score]="passwordStrength()"></div>
-    </div>
-
     <div class="actions">
       <button type="submit" [disabled]="!canSubmit()">Create account</button>
     </div>

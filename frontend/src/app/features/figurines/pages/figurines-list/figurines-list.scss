@@ -1,6 +1,6 @@
 :host {
   display: block;
-  padding: 2rem;
+  padding: 1rem;
 }
 
 .list-header {
@@ -13,6 +13,12 @@
     font-size: 1.75rem;
     font-weight: 600;
     margin: 0;
+  }
+
+  .actions {
+    margin-left: auto;
+    display: flex;
+    gap: 0.5rem;
   }
 }
 
@@ -43,4 +49,33 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
   gap: 1.5rem;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: background 0.15s;
+
+  &--primary {
+    background-color: #007bff;
+    color: #fff;
+
+    &:hover {
+      background-color: #0069d9;
+    }
+  }
+
+  &--secondary {
+    background-color: #f0f0f0;
+    color: #333;
+
+    &:hover {
+      background-color: #e0e0e0;
+    }
+  }
 }

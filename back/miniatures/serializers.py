@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Miniature
+from .models import Miniature, MiniaturePhoto
 from .models import Manufacturer
 from .models import Element
 
@@ -21,9 +21,12 @@ class ElementSerializer(serializers.ModelSerializer):
             'description',
         ]
 
+
 class MiniatureSerializer(serializers.ModelSerializer):
     elements = ElementSerializer(many=True, read_only=True)
     manufacturer_data = ManufacturerSerializer(source='manufacturer', read_only=True)
+    cover_photo = serializers.SerializerMethodField()
+    photos = serializers.SerializerMethodField()
 
     class Meta:
         model = Miniature
@@ -33,5 +36,66 @@ class MiniatureSerializer(serializers.ModelSerializer):
             'description',
             'manufacturer',
             'elements',
-            'manufacturer_data'
+            'manufacturer_data',
+            'cover_photo',
+            'photos',
         ]
+
+    def get_cover_photo(self, obj):
+        request = self.context.get('request')
+        cover_photo = obj.photos.filter(is_cover=True).first()
+
+        if cover_photo and request:
+            return request.build_absolute_uri(cover_photo.photo.url)
+    
+    def get_photos(self, obj):
+        photos = obj.photos.all().filter(is_cover=False)
+        return [photo.photo.url for photo in photos]
+    
+    def validate(self, attrs):
+        if self.instance is None and not self.initial_data.get('cover_photo'):
+            raise serializers.ValidationError("Cover photo is required when creating a new miniature.")
+        return super().validate(attrs)
+    
+    def create(self, validated_data):
+        elements_data = self.initial_data.get('elements', [])
+        photos_data = self.initial_data.get('photos', [])
+        cover_photo = self.initial_data.get('cover_photo', None)
+        miniature = Miniature.objects.create(**validated_data)
+
+        for element_data in elements_data:
+            Element.objects.create(miniature=miniature, **element_data)
+
+        for photo_data in photos_data:
+            MiniaturePhoto.objects.create(miniature=miniature, **photo_data)
+        
+        if cover_photo:
+            MiniaturePhoto.objects.create(miniature=miniature, photo=cover_photo, is_cover=True)
+
+        return miniature
+    
+    def update(self, instance, validated_data):
+        elements_data = self.initial_data.get('elements', [])
+        photos_data = self.initial_data.get('photos', [])
+        cover_photo = self.initial_data.get('cover_photo', None)
+
+        instance.name = validated_data.get('name', instance.name)
+        instance.description = validated_data.get('description', instance.description)
+        instance.manufacturer = validated_data.get('manufacturer', instance.manufacturer)
+
+        for element in instance.elements.all():
+            element.delete()
+
+        instance.save()
+
+        for element_data in elements_data:
+            Element.objects.create(miniature=instance, **element_data)
+        
+        for photo_data in photos_data:
+            MiniaturePhoto.objects.create(miniature=instance, **photo_data)
+
+        if cover_photo:
+            instance.photos.filter(is_cover=True).delete()
+            MiniaturePhoto.objects.create(miniature=instance, photo=cover_photo, is_cover=True)
+
+        return instance

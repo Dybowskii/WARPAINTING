@@ -3,7 +3,7 @@ import { signalStore, withState, withMethods, withComputed, patchState } from '@
 import { rxMethod } from '@ngrx/signals/rxjs-interop';
 import { tapResponse } from '@ngrx/operators';
 import { pipe, switchMap } from 'rxjs';
-import { Figurine } from '../models/figurine.model';
+import { CreateFigurineDto, Figurine } from '../models/figurine.model';
 import { FigurinesService } from '../services/figurines';
 
 interface FigurinesState {
@@ -59,6 +59,27 @@ export const FigurinesStore = signalStore(
               },
               error: () => {
                 patchState(store, { error: 'Błąd ładowania', loading: false });
+              },
+            }),
+          );
+        }),
+      ),
+    ),
+    create: rxMethod<FormData>(
+      pipe(
+        switchMap((figurine) => {
+          console.log('Creating figurine with data:', figurine);
+          patchState(store, { loading: true, error: null });
+          return service.create(figurine).pipe(
+            tapResponse({
+              next: (newFigurine) => {
+                patchState(store, {
+                  figurines: [...store.figurines(), newFigurine],
+                  loading: false,
+                });
+              },
+              error: () => {
+                patchState(store, { error: 'Błąd tworzenia', loading: false });
               },
             }),
           );

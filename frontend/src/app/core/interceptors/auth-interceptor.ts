@@ -10,6 +10,10 @@ export const authInterceptor: HttpInterceptorFn = (req, next) => {
     return next(req);
   }
 
+  if (req.body instanceof FormData) {
+    return next(req);
+  }
+
   const modifiedReq = req.clone({
     body: req.body ? decamelizeKeys(req.body) : req.body,
   });

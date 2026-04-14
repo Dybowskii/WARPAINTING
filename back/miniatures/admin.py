@@ -3,12 +3,12 @@ from .models import Manufacturer, Miniature, Element
 
 @admin.register(Manufacturer)
 class ManufacturerAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'description')
 
 @admin.register(Miniature)
 class MiniatureAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'description', 'manufacturer')
 
 @admin.register(Element)
 class ElementAdmin(admin.ModelAdmin):
-    pass
+    list_display = ('name', 'description', 'miniature')
