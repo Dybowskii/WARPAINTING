@@ -7,18 +7,25 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('projects', '0002_projectimage_image'),
+        ("projects", "0002_projectimage_image"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='projectimage',
-            name='image',
-            field=models.ImageField(blank=True, max_length=255, null=True, upload_to=projects.models.project_image_path),
+            model_name="projectimage",
+            name="image",
+            field=models.ImageField(
+                blank=True,
+                max_length=255,
+                null=True,
+                upload_to=projects.models.project_image_path,
+            ),
         ),
         migrations.AlterField(
-            model_name='stepimage',
-            name='image',
-            field=models.ImageField(max_length=255, upload_to=projects.models.step_image_path),
+            model_name="stepimage",
+            name="image",
+            field=models.ImageField(
+                max_length=255, upload_to=projects.models.step_image_path
+            ),
         ),
     ]
