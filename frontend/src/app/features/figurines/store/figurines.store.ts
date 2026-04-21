@@ -65,27 +65,23 @@ export const FigurinesStore = signalStore(
         }),
       ),
     ),
-    create: rxMethod<FormData>(
-      pipe(
-        switchMap((figurine) => {
-          console.log('Creating figurine with data:', figurine);
-          patchState(store, { loading: true, error: null });
-          return service.create(figurine).pipe(
-            tapResponse({
-              next: (newFigurine) => {
-                patchState(store, {
-                  figurines: [...store.figurines(), newFigurine],
-                  loading: false,
-                });
-              },
-              error: () => {
-                patchState(store, { error: 'Błąd tworzenia', loading: false });
-              },
-            }),
-          );
+    create(figurine: FormData) {
+      patchState(store, { loading: true, error: null });
+
+      return service.create(figurine).pipe(
+        tapResponse({
+          next: (newFigurine) => {
+            patchState(store, {
+              figurines: [...store.figurines(), newFigurine],
+              loading: false,
+            });
+          },
+          error: () => {
+            patchState(store, { error: 'Błąd tworzenia', loading: false });
+          },
         }),
-      ),
-    ),
+      );
+    },
     selectFigurine(id: string) {
       patchState(store, { selectedId: id });
     },

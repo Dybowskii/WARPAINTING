@@ -1,3 +1,6 @@
+import json
+
+from PIL.ImagePalette import raw
 from rest_framework import serializers
 
 from .models import Element, Manufacturer, Miniature, MiniaturePhoto
@@ -19,12 +22,11 @@ class ElementSerializer(serializers.ModelSerializer):
         fields = [
             "pk",
             "name",
-            "description",
         ]
 
 
 class MiniatureSerializer(serializers.ModelSerializer):
-    elements = ElementSerializer(many=True, read_only=True)
+    elements = ElementSerializer(many=True, required=False)
     manufacturer_data = ManufacturerSerializer(source="manufacturer", read_only=True)
     cover_photo = serializers.SerializerMethodField()
     photos = serializers.SerializerMethodField()
@@ -41,6 +43,7 @@ class MiniatureSerializer(serializers.ModelSerializer):
             "cover_photo",
             "photos",
         ]
+
 
     def get_cover_photo(self, obj):
         request = self.context.get("request")
@@ -61,21 +64,11 @@ class MiniatureSerializer(serializers.ModelSerializer):
         return super().validate(attrs)
 
     def create(self, validated_data):
-        elements_data = self.initial_data.get("elements", [])
-        photos_data = self.initial_data.get("photos", [])
-        cover_photo = self.initial_data.get("cover_photo", None)
+        elements_data = self.initial_data.pop("elements", "[]")
         miniature = Miniature.objects.create(**validated_data)
 
         for element_data in elements_data:
-            Element.objects.create(miniature=miniature, **element_data)
-
-        for photo_data in photos_data:
-            MiniaturePhoto.objects.create(miniature=miniature, **photo_data)
-
-        if cover_photo:
-            MiniaturePhoto.objects.create(
-                miniature=miniature, photo=cover_photo, is_cover=True
-            )
+            Element.objects.create(miniature=miniature, **json.loads(element_data))
 
         return miniature
 

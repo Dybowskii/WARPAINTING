@@ -30,7 +30,7 @@
             <div class="tile" cdkDrag [class.border]="i === 0">
               <img class="img" [src]="p.previewUrl" alt="" />
 
-              <button type="button" class="remove" (click)="removePhoto(p.id)">x</button>
+              <button type="button" class="remove" (click)="removePhoto(p.id)">X</button>
             </div>
           }
 
@@ -89,6 +89,34 @@
       @if (description && description.touched() && description.invalid()) {
         <div class="help">Enter a valid description.</div>
       }
+    </div>
+    <div class="row two-columns">
+      @for (element of elements(); track idx; let idx = $index) {
+        <div class="field">
+          <label class="lbl" for="element-{{ idx }}"
+            >Element {{ idx + 1 }}
+            <button type="button" class="remove-element-btn" (click)="removeElement(idx)">
+              <i class="fa-solid fa-x" style="color: rgb(234, 35, 56)"></i></button
+          ></label>
+          <div class="part-row">
+            <input
+              id="element-{{ idx }}"
+              type="text"
+              placeholder="Enter element name"
+              [formField]="form.figurineElements![idx].name"
+              autocomplete="none"
+              autofill="none"
+            />
+          </div>
+        </div>
+      }
+      <div class="field new-element-field">
+        <div class="lbl new-element-label" aria-hidden="true">Element</div>
+        <div (click)="addElement()" class="new-element-container">
+          <div class="plus">+</div>
+          <div class="add-text">New element</div>
+        </div>
+      </div>
     </div>
     <div class="actions">
       <button type="submit" [disabled]="!canSubmit()">Create account</button>

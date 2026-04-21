@@ -11,8 +11,12 @@ interface FigurineCreateForm {
   figurineName: string;
   manufacturer: string;
   description: string;
-  imageToken: string;
+  figurineElements: FigurinePart[];
 }
+
+type FigurinePart = {
+  name: string;
+};
 
 type PhotoItem = {
   id: string;
@@ -117,8 +121,29 @@ export class FigurineForm {
     figurineName: '',
     manufacturer: '',
     description: '',
-    imageToken: '',
+    figurineElements: [{ name: '' }],
   });
+
+  protected elements = computed(() => this.formModel().figurineElements ?? []);
+
+  addElement() {
+    const current = this.elements();
+    const newElement: FigurinePart = { name: '' };
+
+    this.formModel.update((m) => ({
+      ...m,
+      figurineElements: [...(m.figurineElements ?? []), newElement],
+    }));
+  }
+
+  removeElement(index: number) {
+    const current = this.elements();
+
+    this.formModel.update((m) => ({
+      ...m,
+      figurineElements: current.filter((_, i) => i !== index),
+    }));
+  }
 
   manufacturers = signal<Manufacturer[]>([]);
 
@@ -136,6 +161,7 @@ export class FigurineForm {
       required(p.figurineName);
       required(p.manufacturer);
       required(p.description);
+      required(p.figurineElements);
     },
     {
       submission: {
@@ -163,13 +189,24 @@ export class FigurineForm {
               formData.append('photo', p.file, `${uuid}.jpg`);
             }
           });
+          model.figurineElements.forEach((el, i) => {
+            formData.append(`elements`, JSON.stringify({ name: el.name }));
+          });
           console.log(formData);
-          this.store.create(formData);
-          // this.router.navigate(['/figurines']);
+          this.store.create(formData).subscribe((createdFigurine) => {
+            this.router.navigate(['/figurines', createdFigurine.pk]);
+          });
         },
       },
     },
   );
+  protected canSubmit = computed(() => {
+    const model = this.formModel();
 
-  protected canSubmit = computed(() => this.form().valid() && this.photos().length > 0);
+    const elementsValid =
+      model.figurineElements.length >= 0 &&
+      model.figurineElements.every((p) => p.name.trim().length > 0);
+
+    return this.form().valid() && this.photos().length > 0 && elementsValid;
+  });
 }
